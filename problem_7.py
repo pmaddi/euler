@@ -1,51 +1,26 @@
-import math
-import functools
+PRIMES = {1}
+def is_prime_relative(num, p_set):
+    for p in p_set:
+        if num % p == 0:
+            return False
+    return True
 
-NUM = 7316717653133062491922511967442657474235534919493496983520312774506326239578318016984801869478851843858615607891129494954595017379583319528532088055111254069874715852386305071569329096329522744304355766896648950445244523161731856403098711121722383113622298934233803081353362766142828064444866452387493035890729629049156044077239071381051585930796086670172427121883998797908792274921901699720888093776657273330010533678812202354218097512545405947522435258490771167055601360483958644670632441572215539753697817977846174064955149290862569321978468622482839722413756570560574902614079729686524145351004748216637048440319989000889524345065854122758866688116427171479924442928230863465674813919123162824586178664583591245665294765456828489128831426076900422421902267105562632111110937054421750694165896040807198403850962455444362981230987879927244284909188845801561660979191338754992005240636899125607176060588611646710940507754100225698315520005593572972571636269561882670428252483600823257530420752963450
+def next_prime(p_set):
+    max_prime = max(p_set)
+    candidate = max_prime + 1
+    while not is_prime_relative(candidate, p_set):
+        candidate += 1
+    return candidate
 
-def assertEqual(x, y):
-    if x == y:
-        return
-    else:
-        raise Exception(str(x) + ' is not equal to ' + str(y))
+assert(next_prime({2}) == 3)
+assert(next_prime({2, 3}) == 5)
 
-def digit(n, idx):
-    max_idx = int(math.log10(n))
-    place = max_idx - idx
-    return (n // (10 ** place)) % 10
+def nth_prime(n):
+    p_set = {2}
+    while len(p_set) < n:
+        p_set.add(next_prime(p_set))
+    return max(p_set)
 
-def test_digit():
-    assertEqual(digit(1, 0), 1)
-    assertEqual(digit(100, 0), 1)
-    assertEqual(digit(314, 2), 4)
-
-def product_range(n, idx_rng):
-    return functools.reduce(
-            lambda x, y: x * y,
-            (digit(n, i) for i in idx_rng))
-
-def test_product_range():
-    assertEqual(product_range(1111, range(0, 4)), 1)
-    assertEqual(product_range(1101, range(0, 4)), 0)
-    assertEqual(product_range(1234, range(2, 4)), 12)
-
-def rolling_max_product(n, window):
-    max_idx = int(math.log10(n))
-    left = 0
-    right = left + window
-    sofar = 0
-    while right <= max_idx:
-        cand = product_range(n, range(left, right))
-        sofar = max(cand, sofar)
-        left += 1
-        right += 1
-    return sofar
-
-def test_rolling_max_product():
-    assertEqual(rolling_max_product(NUM, 4), 5832)
-
-if __name__ == '__main__':
-    test_digit()
-    test_product_range()
-    test_rolling_max_product()
-    print(rolling_max_product(NUM, 13))
+assert(nth_prime(1) == 2)
+assert(nth_prime(6) == 13)
+print(nth_prime(10001))
