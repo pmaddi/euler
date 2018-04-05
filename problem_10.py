@@ -1,35 +1,36 @@
 from problem_8 import assertEqual
-from problem_7 import next_prime
 
 import logging
 
-def primes_until(n):
-    p_set = {2}
-    nxt = next_prime(p_set)
-    running_sum = sum(p_set)
-    while nxt < n:
-        if not len(p_set) % 100:
-            logging.warning(nxt)
-        p_set.add(nxt)
-        running_sum += nxt
-        nxt = next_prime(p_set)
-    return p_set, running_sum
+import numpy as np
 
-def sum_of_primes_until(n):
-    return primes_until(n)[1]
+arr = np.repeat(0, 2000000)
 
-def test_next_prime():
-    assertEqual(next_prime({2, 3, 5}), 7)
+def build_arr_lt(n):
+    arr = np.repeat(0, n - 1)
+    arr[1 - 1] = 1 # 1 is considered nonprime
+    for i in range(2, n):
+        max_mult = (n - 1) // i
+        for multiples in range(2, max_mult + 1):
+            arr[i * multiples - 1] = 1
+    return arr
 
-def test_primes_lst_until():
-    assertEqual(primes_until(10), ({2, 3, 5, 7}, 17))
+def sum_arr_primes(arr):
+    max_val = len(arr)
+    r_sum = 0
+    for i in range(max_val):
+        if arr[i - 1] == 0:
+            r_sum += i
+    return r_sum
 
-def test_sum_of_primes_until():
-    assertEqual(sum_of_primes_until(10), 17)
+def test_build_arr_until():
+    assert(all(np.array([1, 0, 0, 1, 0, 1, 0, 1, 1]) == build_arr_lt(10)))
+
+def test_sum_arr_primes():
+    assertEqual(sum_arr_primes(np.array([1, 0, 0, 1, 0, 1, 0, 1, 1, 1])), 17)
+    assertEqual(sum_arr_primes(np.array([1, 0, 0, 1, 0, 1, 0, 1, 1])), 17)
 
 if __name__ == '__main__':
-    test_next_prime()
-    test_primes_lst_until()
-    test_sum_of_primes_until()
-
-    print(sum_of_primes_until(2000000))
+    test_build_arr_until()
+    test_sum_arr_primes()
+    print(sum_arr_primes(build_arr_lt(2000000)))
