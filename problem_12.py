@@ -10,47 +10,61 @@
 - 21: 1,3,7,21: 6*7
 - 28: 1,2,4,7,14,28 : 7*8 / 2 : 7 * 2 * 2 : 1, 2, 4, 14, 28
 - 36: 8*9/2 = 2 2 3 3 = 1, 2, 3, 4, 6, 9, 12, 18, 36
+    : 1 2 4 8
+    : 1 3 9
 
-1. prime factorization of n and n-1
-2. prime factorization of s
-3. prime fractorization to factor count
-    - powerset size thing
+1. get factors of n, n-1
+2. get prods of each of factors across. include if divides s
 
 s = n(n-1)/2
 '''
-def factor_count(n):
-    count = 0
+def factors(n):
+    out = set()
     for i in range(1, n + 1):
         if n % i == 0:
-            count += 1
-    return count
+            out.add(i)
+    return out
 
-def triangles(div_cnt):
-    step = 1
-    num = 0
-    divisors = 1
-    count = 0
-    while divisors <= div_cnt:
-        num += step
-        divisors = factor_count(num)
-        step += 1
-        count += 1
-        if not count % 1000:
-            print(divisors, num)
-    return num
+def test_factors():
+    assert(factors(1) == {1})
+    assert(factors(2) == {1, 2})
+    assert(factors(4) == {1, 2, 4})
+    assert(factors(28) == {1, 2, 4, 7, 14, 28})
 
-def test_factor_count():
-    assert(factor_count(1) == 1)
-    assert(factor_count(2) == 2)
-    assert(factor_count(3) == 2)
-    assert(factor_count(10) == 4)
-    assert(factor_count(28) == 6)
+def triangle_factor_count_from_leg(n):
+    s = n * (n - 1) // 2
+    n_factors = factors(n)
+    n_m_one_factors = factors(n - 1)
 
-def test_triangles():
-    assert(triangles(3) == 6)
-    assert(triangles(5) == 28)
+    s_factors = set()
+    for i in n_factors:
+        for j in n_m_one_factors:
+            k = i * j
+            if k <= s and s % k == 0:
+                s_factors.add(k)
+    return len(s_factors)
+
+
+def triangle_divisors_greater_than(divs):
+    assert(divs > 0)
+    n = 1
+    s_div_count = 1
+    while s_div_count <= divs:
+        n += 1
+        s_div_count = triangle_factor_count_from_leg(n)
+    return n * (n - 1) // 2
+
+def test_triangle_factor_count_from_leg():
+    assert(triangle_factor_count_from_leg(3) == 2)
+    assert(triangle_factor_count_from_leg(4) == 4)
+    assert(triangle_factor_count_from_leg(8) == 6)
+
+def test_triangle_divisors_greater_than():
+    assert(triangle_divisors_greater_than(5) == 28)
 
 if __name__ == '__main__':
-    test_factor_count()
-    test_triangles()
-    print(triangles(500))
+    test_factors()
+    test_triangle_factor_count_from_leg()
+    test_triangle_divisors_greater_than()
+    print(triangle_divisors_greater_than(500))
+
