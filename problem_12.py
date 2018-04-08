@@ -1,4 +1,7 @@
 '''
+NOTE:
+    This is a bad implementation. Should use that the prime factorization can produce the total prime count very easily.
+
 -  1: 1
 2:1, 2
 - 3: 1,3
