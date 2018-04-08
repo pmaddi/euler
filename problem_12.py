@@ -1,3 +1,23 @@
+'''
+-  1: 1
+2:1, 2
+- 3: 1,3
+4: 1, 2, 4
+5: 1, 5
+- 6: 1,2,3,6 : 3*4/2 : 3 * 2
+- 10: 1,2,5,10 : 4 * 5 / 2 :
+- 15: 1,3,5,15: 5*6
+- 21: 1,3,7,21: 6*7
+- 28: 1,2,4,7,14,28 : 7*8 / 2 : 7 * 2 * 2 : 1, 2, 4, 14, 28
+- 36: 8*9/2 = 2 2 3 3 = 1, 2, 3, 4, 6, 9, 12, 18, 36
+
+1. prime factorization of n and n-1
+2. prime factorization of s
+3. prime fractorization to factor count
+    - powerset size thing
+
+s = n(n-1)/2
+'''
 def factor_count(n):
     count = 0
     for i in range(1, n + 1):
