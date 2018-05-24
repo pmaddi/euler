@@ -53,6 +53,7 @@ Card.prototype.value = function() {
         K: 13,
         Q: 12,
         J: 11,
+        T: 10,
     };
     const c = this.hand_string.charAt(0);
     if (c in lookup) {
@@ -198,31 +199,205 @@ Hand.prototype.flush = function() {
         }
     }, null);
     if (cmp) {
-        return this.highCard().value();
+        return this.highCard();
     }
     return cmp;
 }
 
 Hand.prototype.highCard = function() {
+    if (this.cards.length < 1) {
+        return false;
+    }
     const idx = argMax(this.cards.map(c => c.value()));
-    return this.cards[idx];
+    return this.cards[idx].value();
 }
 
+Hand.prototype.royalFlush = function () {
+    return this.flush() && (this.straight() == 14)
+}
+
+Hand.prototype.straightFlush = function () {
+    if (this.flush() && this.straight()) {
+        return this.straight();
+    }
+    return false;
+}
+
+Hand.prototype.cardsString = function () {
+    return this.cards.map(c => c.hand_string).join(' ');
+}
+
+function maxof(h1, h2) {
+    if (h1 > h2) {
+        return -1;
+    } else if (h2 > h1) {
+        return 1;
+    }
+    return 0;
+}
+function listMaxOf(h1, h2) {
+    if (h1[0] > h2[0]) {
+        return -1;
+    } else if (h2[0] > h1[0]) {
+        return 1;
+    } else if (h1[1] > h2[1]) {
+        return -1;
+    } else if (h2[1] > h1[1]) {
+        return 1;
+    }
+    return 0;
+}
 
 function compare(h1, h2) {
-    h1.flush() && (h1.straight() == 14)
+    // Returns -1 0 or 1. -1 means h1 won , 0 means tie and 1 means h2 won.
+    if (h1.royalFlush() && h2.royalFlush()) {
+        return 0;
+    } else if (h1.royalFlush()) {
+        return -1;
+    } else if (h2.royalFlush()) {
+        return 1;
+    }
+    if (h1.straightFlush() && h2.straightFlush()) {
+        return maxof(h1.straightFlush(), h2.straightFlush());
+    } else if (h1.straightFlush()) {
+        return -1;
+    } else if (h2.straightFlush()) {
+        return 1;
+    }
+    if (h1.fourOfAKind() && h2.fourOfAKind()) {
+        return maxof(h1.fourOfAKind(), h2.fourOfAKind());
+    } else if (h1.fourOfAKind()) {
+        return -1;
+    } else if (h2.fourOfAKind()) {
+        return 1;
+    }
+    if (h1.fullHouse() && h2.fullHouse()) {
+        return listMaxOf(h1.fullHouse(), h2.fullHouse());
+    } else if (h1.fullHouse()) {
+        return -1;
+    } else if (h2.fullHouse()) {
+        return 1;
+    }
+    if (h1.flush() && h2.flush()) {
+        return maxof(h1.flush(), h2.flush());
+    } else if (h1.flush()) {
+        return -1;
+    } else if (h2.flush()) {
+        return 1;
+    }
+    if (h1.straight() && h2.straight()) {
+        return maxof(h1.straight(), h2.straight());
+    } else if (h1.straight()) {
+        return -1;
+    } else if (h2.straight()) {
+        return 1;
+    }
+    if (h1.threeOfAKind() && h2.threeOfAKind()) {
+        const m = maxof(h1.threeOfAKind(), h2.threeOfAKind());
+        if (m) {
+            return m;
+        } else {
+            const threeVal = h1.threeOfAKind();
+            const newh1 = new Hand(h1.cards
+                .filter(c => c.value() !== threeVal)
+                .map(c => c.hand_string));
+            const newh2 = new Hand(h2.cards
+                .filter(c => c.value() !== threeVal)
+                .map(c => c.hand_string));
+            return compare(newh1, newh2);
+        }
+    } else if (h1.threeOfAKind()) {
+        return -1;
+    } else if (h2.threeOfAKind()) {
+        return 1;
+    }
+    if (h1.twoPair() && h2.twoPair()) {
+        const m = listMaxOf(h1.twoPair(), h2.twoPair());
+        if (m) {
+            return m;
+        } else {
+            const [twoOne, twoTwo] = h1.twoPair();
+            const newh1 = new Hand(h1.cards
+                .filter(c => (c.value() !== twoOne) && (c.value() !== twoTwo))
+                .map(c => c.hand_string));
+            const newh2 = new Hand(h2.cards
+                .filter(c => (c.value() !== twoOne) && (c.value() !== twoTwo))
+                .map(c => c.hand_string));
+            return compare(newh1, newh2);
+        }
+    } else if (h1.twoPair()) {
+        return -1;
+    } else if (h2.twoPair()) {
+        return 1;
+    }
+    if (h1.twoOfAKind() && h2.twoOfAKind()) {
+        const m = maxof(h1.twoOfAKind(), h2.twoOfAKind());
+        if (m) {
+            return m;
+        } else {
+            const twoKind = h1.twoOfAKind();
+            const newh1 = new Hand(h1.cards
+                .filter(c => c.value() !== twoKind)
+                .map(c => c.hand_string));
+            const newh2 = new Hand(h2.cards
+                .filter(c => c.value() !== twoKind)
+                .map(c => c.hand_string));
+            return compare(newh1, newh2);
+        }
+    } else if (h1.twoOfAKind()) {
+        return -1;
+    } else if (h2.twoOfAKind()) {
+        return 1;
+    }
+    if (h1.highCard() && h2.highCard()) {
+        const m = maxof(h1.highCard(), h2.highCard());
+        if (m) {
+            return m;
+        } else {
+            const highCard = h1.highCard();
+            const newh1 = new Hand(h1.cards
+                .filter(c => c.value() !== highCard)
+                .map(c => c.hand_string));
+            const newh2 = new Hand(h2.cards
+                .filter(c => c.value() !== highCard)
+                .map(c => c.hand_string));
+            
+            // console.log(`${highCard} ${h1.cardsString()} ${h2.cardsString()} rec4`);
+            return compare(newh1, newh2);
+        }
+    } else if (h1.highCard()) {
+        return -1;
+    } else if (h2.highCard()) {
+        return 1;
+    }
+    return 0;
+}
 
-
+function results(fname, cb) {
+    fs.readFile(fname, 'utf8', function(err, data) {
+        const lines = data.split('\n').filter(l => l !== '');
+        const hand_arrs = lines.map(ln => ln.split(' '))
+        const hands = hand_arrs.map(
+            cd_strs => [new Hand(cd_strs.slice(0, 5)), 
+                        new Hand(cd_strs.slice(5, 10))]);
+        // console.log(hands.slice(2));
+        const handResults = hands.map(hs => {
+            // console.log(hs[0]);
+            // console.log(hs[1]);
+            // console.log('***');
+            const cmp = compare(hs[0], hs[1]);
+            if (cmp === 0) {
+                console.log(hs[0], hs[1]);
+            }
+            return cmp;
+        });
+        cb(handResults);
+    });
 }
 
 function main() {
-    fs.readFile('p054_poker.txt', 'utf8', function(err, data) {
-        const lines = data.split('\n');
-        const hand_arrs = lines.map(ln => ln.split(' '))
-        const hands = hand_arrs.map(
-            cd_strs => [new Hand(cd_strs.slice(5)), 
-                        new Hand(cd_strs.slice(5, 10))])
-
+    results('p054_poker.txt', r => {
+        console.log(counts(r)[-1]);
     });
 }
 
@@ -258,6 +433,19 @@ if (typeof require != 'undefined' && require.main==module) {
 
     const hd7 = new Hand(['2S', '2D', '2X', '5N', '5S']);
     assert(hd6.twoPair().equals([5, 2]));
+
+    assert(hd6.highCard() === 5);
+    assert(hd5.highCard() === 7);
+
+    assert(compare(hd6, hd7) === 0);
+    assert(compare(hd4, hd6) === -1);
+    assert(compare(hd5, hd6) === 1);
+
+    assert(compare(new Hand(['5H', '5C', '6S', '7S', 'KD']),
+                   new Hand(['2C', '3S', '8S', '8D', 'TD'])) === 1);
+    results('p054_poker_test.txt', r => {
+        assert(r.equals([1, -1, 1, -1, -1]));
+    });
 
     main();
 }
