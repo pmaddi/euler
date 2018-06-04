@@ -1,7 +1,7 @@
 import numpy as np
 import math
 
-EXP = 6
+EXP = 8
 MAXVAL = 10**EXP
 
 def digits(x):
@@ -9,6 +9,12 @@ def digits(x):
 
 def concat(i, j):
     return int(str(i) + str(j))
+
+# def isprime(n, pset):
+#     if n in pset:
+#         return True
+#     v = h_isprime(n)
+
 
 def isprime(n):
     """Returns True if n is prime."""
@@ -49,22 +55,6 @@ def primes_lt(n):
         if not nums[i]:
             yield i + 1
 
-def primes_lt_alt(n):
-    '''too slow'''
-    nums = np.zeros(n - 1, dtype=bool)
-    nums[0] = True
-    m = int(n ** .5)
-    for i in range(2, n):
-        if nums[i - 1] == True:
-            continue
-        else:
-            yield i
-        if i > m:
-            continue
-        for j in range(2, (n // i) + 1):
-            if i * j < n:
-                nums[i * j - 1] = True # is nonprime
-
 def ts(*i):
     return tuple(sorted(i))
 
@@ -95,14 +85,14 @@ if __name__ == '__main__':
             # if isprime(concat(p_i, p_j)) and isprime(concat(p_j, p_j)):
             #     pairs.add(ts(p_i, p_j))
 
-    print("Pairs len", len(pairs))
     lenthing = 3
     new_store = None
     old_store = list(pairs)
     for x in range(3, 6):
+        old_store_primes = sorted(list(set([i for j in old_store for i in j])))
         new_store = set()
-        for i in range(len(primes)):
-            p_i = primes[i]
+        for i in range(len(old_store_primes)):
+            p_i = old_store_primes[i]
             if p_i > 10**(EXP // 2):
                 break
             for j in range(len(old_store)):
@@ -119,5 +109,4 @@ if __name__ == '__main__':
                 if does:
                     new_store.add(ts(p_i, *p_j))
         old_store = list(new_store)
-        print(x, len(new_store))
-        print(new_store)
+    print(sum(list(new_store)[0]))
