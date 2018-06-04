@@ -71,51 +71,27 @@ def ts(*i):
 def valid(p_i, p_j, p_set):
     return concat(p_i, p_j) in p_set and concat(p_j, p_i) in p_set
 
+def explore(v, trie):
+    if (v not in trie) and (not isprime(v)):
+        return
+    for k in trie:
+        pos1 = concat(k, v)
+        pos2 = concat(v, k)
+
+    if v in trie:
 if __name__ == '__main__':
-    primes = list(primes_lt(MAXVAL))
-    p_set = set(primes)
-    pairs = set()
+    TRIE = {}
+    t = TRIE
+    i = 1
+    while True:
+        if i in t:
+            i += 1
+            continue
+        if isprime(i):
+            t[i] = {}
+            i += 1
+            continue
+        i += 1
 
-    for i in range(len(primes)):
-        p_i = primes[i]
-        if p_i > 10**(EXP // 2):
-            break
-        for j in range(i, len(primes)):
-            p_j = primes[j]
-            if concat(p_i, p_j) > MAXVAL:
-                break
-            if valid(p_i, p_j, p_set):
-                pairs.add(ts(p_i, p_j))
-            # maxcat = max(concat(p_i, p_j), concat(p_j, p_i))
-            # if maxcat < MAXVAL:
-            #     continue
-            # if isprime(concat(p_i, p_j)) and isprime(concat(p_j, p_j)):
-            #     pairs.add(ts(p_i, p_j))
 
-# print(len(pairs))
-    lenthing = 3
-    new_store = None
-    old_store = list(pairs)
-    for x in range(3, 6):
-        new_store = set()
-        for i in range(len(primes)):
-            p_i = primes[i]
-            if p_i > 10**(EXP // 2):
-                break
-            for j in range(len(old_store)):
-                p_j = old_store[j]
-                does = True
-                for v in p_j:
-                    if digits(concat(p_i, v)) == EXP:
-                        if not (isprime(concat(p_i, v)) and isprime(concat(v, p_i))):
-                            does = False
-                            continue
-                    # if not ts(p_i, v) in pairs:
-                    if not valid(p_i, v, p_set):
-                        does = False
-                        continue
-                if does:
-                    new_store.add(ts(p_i, *p_j))
-        old_store = list(new_store)
-        print(x, len(new_store))
-        print(new_store)
+
