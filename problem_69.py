@@ -13,6 +13,7 @@ for i in range(2, N):
         print(i, i / phi_c)
 '''
 import numpy as np
+N = 101
 N = 11
 N = 10**6 + 1
 def primes_lt(n):
@@ -29,39 +30,60 @@ def primes_lt(n):
             primes.add(i + 1)
     return primes
 
-def prime_factor_set(n):
-    i = 2
-    out = set()
-    while i ** 2 <= n:
-        if n % i == 0:
-            n = n // i
-            out.add(i)
-        else:
-            i += 1
-    if n > 1:
-        out.add(n)
-    return out
+primes = primes_lt(N)
 
-prime_factors = primes_lt(N)
-prime_factor_divisible_by = {
-        i: set()
-        for i in prime_factors}
+factorizations = {}
+# The prime factorization for each val
+for i in primes:
+    j = 1
+    while True:
+        val = i * j
+        if val > N:
+            break
+        st = factorizations.get(val, set())
+        st.add(i)
+        factorizations[val] = st
+        j += 1
 
-msf = 0
-v_msf = 0
-
-for val in range(2, N):
-    pfs = prime_factor_set(val)
-    non_relatively_prime_set = set()
-    for prime in pfs:
-        st = prime_factor_divisible_by[prime]
-        st.add(val)
-        non_relatively_prime_set = non_relatively_prime_set.union(st)
+inverted_factorizations = {}
+# The numbers that have the prime in its prime factorization
+for i, st in factorizations.items():
+    for prime in st:
+        s = inverted_factorizations.get(prime, set())
+        s.add(i)
+        inverted_factorizations[prime] = s
 
 
-    phi = val-len(non_relatively_prime_set)
-    rat = val / phi
-    if rat > msf:
-        msf = rat
-        v_msf = val
-        print(v_msf, msf)
+non_relatively_prime_under = {}
+# The numbers lower than key that are not relatively prime to it
+for num, primes in factorizations.items():
+    for p in primes:
+        relatives = inverted_factorizations[p]
+        for r in relatives:
+            if r >= num:
+                s = non_relatively_prime_under.get(r, set())
+                s.add(num)
+                non_relatively_prime_under[r] = s
+print(len(non_relatively_prime_under))
+
+# prime_factor_divisible_by = {
+#         i: set()
+#         for i in primes }
+# msf = 0
+# v_msf = 0
+#
+# for val in range(2, N):
+#     pfs = factorizations[val]
+#     non_relatively_prime_set = set()
+#     for prime in pfs:
+#         st = prime_factor_divisible_by[prime]
+#         st.add(val)
+#         non_relatively_prime_set = non_relatively_prime_set.union(st)
+#     phi = val-len(non_relatively_prime_set)
+#     rat = val / phi
+#     if val % (10**3) == 0:
+#         print('>>>', val, len(pfs), rat)
+#     if rat > msf:
+#         msf = rat
+#         v_msf = val
+#         print(v_msf, msf)
