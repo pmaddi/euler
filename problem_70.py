@@ -1,0 +1,65 @@
+'''
+Prime can't fit the description because P(n) for prime n = n - 1
+'''
+import numpy as np
+from math import gcd
+from itertools import product
+from functools import reduce
+import operator
+
+N = 10
+N = 10**6 + 1
+
+def primes_lt(n):
+    nums = np.zeros(n - 1)
+    nums[0] = 1
+    for i in range(2, int(n ** .5) + 1):
+        for j in range(2, (n // i) + 1):
+            if i * j < n:
+                nums[i * j - 1] = 1 # is nonprime
+    primes = set()
+    for i in range(len(nums)):
+        if not nums[i]:
+            primes.add(i + 1)
+    return primes
+
+def totient(i):
+    phi_c = 0
+    for j in range(1, i):
+        phi_c += int(gcd(i, j) == 1)
+    return phi_c
+
+def totient_from_prime_factorization(n, pf):
+    s_pf = set(pf)
+    out = n
+    for v in s_pf:
+        out *= (1 - 1/v)
+    return out
+
+def pal(a, b):
+    return sorted(str(a)) == sorted(str(b))
+
+def products(len_range, primes):
+    for r in len_range:
+        for i in product(*(primes for i in range(r))):
+            yield i
+
+if __name__ == '__main__':
+    primes = primes_lt(N)
+
+    msf = 10 ** 8
+    msf_val = 0
+    # for i in range(2, N):
+    rev_primes = sorted(list(primes), reverse=True)
+    factorizations = products([1, 2], rev_primes)
+    for fac in factorizations:
+        num = reduce(operator.mul, fac, 1)
+        if num > N:
+            continue
+        phi_c = totient_from_prime_factorization(num, fac)
+        if pal(phi_c , num):
+            rat = num/phi_c
+            if rat < msf:
+                msf = rat
+                msf_val = num
+            print(num, phi_c, rat, msf, msf_val)
