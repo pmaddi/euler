@@ -1,5 +1,13 @@
 '''
 Prime can't fit the description because P(n) for prime n = n - 1
+
+T(n) = prod(p - 1) for p in prime fac of n
+T(p_1 *... p_n) = prod(p - 1)
+
+n/T(n) = p_1 / (p_1 - 1) * p_2 / (p_2 - 1) *...
+
+
+
 '''
 import numpy as np
 from math import gcd
@@ -9,6 +17,7 @@ import operator
 
 N = 10
 N = 10**6 + 1
+N = 10**7
 
 def primes_lt(n):
     nums = np.zeros(n - 1)
@@ -51,15 +60,23 @@ if __name__ == '__main__':
     msf_val = 0
     # for i in range(2, N):
     rev_primes = sorted(list(primes), reverse=True)
-    factorizations = products([1, 2], rev_primes)
-    for fac in factorizations:
-        num = reduce(operator.mul, fac, 1)
-        if num > N:
-            continue
-        phi_c = totient_from_prime_factorization(num, fac)
-        if pal(phi_c , num):
-            rat = num/phi_c
-            if rat < msf:
-                msf = rat
-                msf_val = num
-            print(num, phi_c, rat, msf, msf_val)
+    # factorizations = products([1, 2], rev_primes)
+    # factorizations = zip(rev_primes[3:], rev_primes[:-3])
+
+    for power in range(1, 12):
+        maxbase = N ** (1/power)
+        filtered_primes = [p for p in rev_primes if p <= maxbase]
+
+        factorizations = zip(*(filtered_primes for _ in range(power)))
+        for fac in factorizations:
+            # print(fac)
+            num = reduce(operator.mul, fac, 1)
+            if num > N:
+                continue
+            phi_c = totient_from_prime_factorization(num, fac)
+            if pal(phi_c , num):
+                rat = num/phi_c
+                if rat < msf:
+                    msf = rat
+                    msf_val = num
+                print(num, phi_c, rat, msf, msf_val)
