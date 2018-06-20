@@ -7,7 +7,6 @@ T(p_1 *... p_n) = prod(p - 1)
 n/T(n) = p_1 / (p_1 - 1) * p_2 / (p_2 - 1) *...
 
 
-
 '''
 import numpy as np
 from math import gcd
