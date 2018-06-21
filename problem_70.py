@@ -53,6 +53,7 @@ def products(len_range, primes):
             yield i
 
 if __name__ == '__main__':
+    assert(pal(87109, 79180))
     primes = primes_lt(N)
 
     msf = 10 ** 8
@@ -62,20 +63,21 @@ if __name__ == '__main__':
     # factorizations = products([1, 2], rev_primes)
     # factorizations = zip(rev_primes[3:], rev_primes[:-3])
 
-    for power in range(1, 12):
+    for power in range(2, 3):
         maxbase = N ** (1/power)
         filtered_primes = [p for p in rev_primes if p <= maxbase]
 
-        factorizations = zip(*(filtered_primes for _ in range(power)))
-        for fac in factorizations:
-            # print(fac)
-            num = reduce(operator.mul, fac, 1)
-            if num > N:
-                continue
-            phi_c = totient_from_prime_factorization(num, fac)
-            if pal(phi_c , num):
-                rat = num/phi_c
-                if rat < msf:
-                    msf = rat
-                    msf_val = num
-                print(num, phi_c, rat, msf, msf_val)
+        # factorizations = zip(*(filtered_primes for _ in range(power)))
+        for f_1 in filtered_primes:
+            for f_2 in filtered_primes:
+                fac = [f_1, f_2]
+                num = reduce(operator.mul, fac, 1)
+                if num > N:
+                    continue
+                phi_c = totient_from_prime_factorization(num, fac)
+                if pal(phi_c , num):
+                    rat = num/phi_c
+                    if rat < msf:
+                        msf = rat
+                        msf_val = num
+                    print(num, phi_c, rat, msf, msf_val)
