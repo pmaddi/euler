@@ -24,22 +24,6 @@ def ways(vals):
             lst[i] += lst[i - v]
     return lst
 
-
-
-
-
-
-    # tbl = np.ones((n, n + 1), dtype=int)
-    # for idx_i in range(1, n):
-    #     for idx_j in range(n + 1):
-    #         other_val_idx = idx_j - (idx_i + 1)
-    #         if other_val_idx >= 0:
-    #             other = tbl[idx_i, other_val_idx]
-    #         else:
-    #             other = 0
-    #         tbl[idx_i, idx_j] = tbl[idx_i - 1, idx_j] + other
-    # return tbl[n-1, n] - 1
-
 def get_min_idx_over(lst, val):
     for idx, v in enumerate(lst):
         if v > val:
@@ -49,11 +33,7 @@ def main():
     print(get_min_idx_over(ways(primes_lt(N + 2)), 5000))
 
 if __name__ == '__main__':
-    # print(ways([1,2,3,4,5]))
     assert(ways([1,2,3,4,5])[5] == 7)
     assert(ways(primes_lt(N + 2))[10] == 5)
     assert(get_min_idx_over([1,3,5,7,10], 6) == 3)
-    # print(ways(primes_lt(N + 2)))
-    # print(ways(primes_lt(N + 2))[71])
-    # print(ways(primes_lt(N + 2))[72])
     main()
