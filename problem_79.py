@@ -48,8 +48,11 @@ if __name__ == '__main__':
     assert(valid(joined + joined, trips))
 
     # code = ''.join([str(a) for a in range(1,10)] * 20)#joined + joined
-    code = joined + joined
+    # code = joined + joined
+    code = ''.join([''.join([str(a)]*20) for a in range(0,10)] * 10)#joined + joined
     # for l in range(1000):
+    print(code)
+    assert(valid(code, trips))
     while True:
         dropcount = 0
         for idx, _ in enumerate(code[::-1]):
