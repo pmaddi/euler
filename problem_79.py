@@ -1,18 +1,11 @@
+'''
+7/5
+Maybe make a graph of the digits and do some kind of traversal?
+
+'''
 from pathlib import Path
 import json
-#def in(lst, key):
-#    for k in key:
-#        lst.index(k)
-#        if
-# class Trie:
-#     def __init__(self):
-#         self.dct = {}
-#
-#     def add(self, key):
-#         pass
-#
-# 123
-# 1 34
+
 def is_in(lst, key):
     if not lst and key:
         return False
@@ -31,11 +24,6 @@ def valid(lst, keys):
 
 
 if __name__ == '__main__':
-    # dbls = set()
-    # for t in trips:
-    #     dbls.add(t[0:2])
-    #     dbls.add(t[1:3])
-    # print(dbls)
     nums = Path('p079_keylog.txt').read_text().split()
     trips = sorted(list(set(nums)))
     assert(is_in('12345', '234'))
