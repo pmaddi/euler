@@ -1,6 +1,19 @@
 '''
+NOT WORKING
+
 7/5
 Maybe make a graph of the digits and do some kind of traversal?
+
+no:
+    i = 0
+    while True:
+        code = str(i)
+        if valid(code, trips):
+            print(code)
+            break
+        if i % 1000000 == 0:
+            print('>', i)
+        i += 1
 
 '''
 from pathlib import Path
@@ -35,30 +48,30 @@ if __name__ == '__main__':
     assert(valid(joined, trips))
     assert(valid(joined + joined, trips))
 
-    # code = ''.join([str(a) for a in range(1,10)] * 20)#joined + joined
-    # code = joined + joined
-    code = ''.join([''.join([str(a)]*20) for a in range(0,10)] * 10)#joined + joined
-    # for l in range(1000):
-    print(code)
-    assert(valid(code, trips))
-    while True:
-        dropcount = 0
-        for idx, _ in enumerate(code[::-1]):
-            new_code = code[:idx] + code[idx+1:]
-            if valid(new_code, trips):
-                code = new_code
-                dropcount += 1
-        if dropcount == 0:
-            break
-        # if not l % 100:
-        #     code = code + code
-    print(code)
+    # # code = ''.join([str(a) for a in range(1,10)] * 20)#joined + joined
+    # # code = joined + joined
+    # code = ''.join([''.join([str(a)]*20) for a in range(0,10)] * 10)#joined + joined
+    # # for l in range(1000):
+    # print(code)
+    # assert(valid(code, trips))
+    # while True:
+    #     dropcount = 0
+    #     for idx, _ in enumerate(code[::-1]):
+    #         new_code = code[:idx] + code[idx+1:]
+    #         if valid(new_code, trips):
+    #             code = new_code
+    #             dropcount += 1
+    #     if dropcount == 0:
+    #         break
+    #     # if not l % 100:
+    #     #     code = code + code
+    # print(code)
 
-    # d = {}
-    # for t in trips:
-    #     tmp = d
-    #     for c in t:
-    #         dct = tmp.get(c, {})
-    #         tmp[c] = dct
-    #         tmp = dct
-    # print(json.dumps(d, indent=4))
+    # # d = {}
+    # # for t in trips:
+    # #     tmp = d
+    # #     for c in t:
+    # #         dct = tmp.get(c, {})
+    # #         tmp[c] = dct
+    # #         tmp = dct
+    # # print(json.dumps(d, indent=4))
