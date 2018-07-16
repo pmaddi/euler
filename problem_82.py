@@ -1,3 +1,11 @@
+'''
+for column in columns
+    for i in column
+        for j in column
+            z = i thru j + memoized[j]
+        next memoized [i] = min z
+'''
+
 import numpy as np
 from problem_81 import load
 
