@@ -1,11 +1,3 @@
-'''
-for column in columns
-    for i in column
-        for j in column
-            z = i thru j + memoized[j]
-        next memoized [i] = min z
-'''
-
 import numpy as np
 from problem_81 import load
 
@@ -58,8 +50,6 @@ def min_right_down_up_path(arr):
             break
     return min(rcol)
 
-
-
 def test_min_right_down_up_path():
     a = np.array(
         [[1,2,1],
@@ -72,13 +62,8 @@ def test_min_right_down_up_path():
          [10,20,1]]).T
     assert(min_right_down_up_path(a) == 6)
 
-
-
-
-
 if __name__ == '__main__':
     test_min_paths_between()
     test_min_right_down_up_path()
     mat = load('p082_matrix.txt')
     print(min_right_down_up_path(mat))
-    # print(mat)
