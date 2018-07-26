@@ -28,9 +28,22 @@ def stationary(mat):
     powr = mat
     for i in range(1000):
         powr = powr * mat
-    return powr[0]
+    return np.array(powr)[0]
+
+def most_probable_str(stat):
+    st = sorted(list(enumerate(stat)), key=lambda x: x[0], reverse=True)
+    out = ''
+    for i, _ in st[:3]:
+        out += str(i).zfill(2)
+    return out
+
+def p_84(sides):
+    mat = just_dice_matrix(6)
+    stab = stationary(mat)
+    return most_probable_str(stab)
+
 
 if __name__ == '__main__':
     test_dice_odds()
-    stab = stationary(just_dice_matrix(6))
-    print(stab)
+    # assert(p_84(6) == '102400')
+    # print(p_84(4))
