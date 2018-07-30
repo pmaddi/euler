@@ -2,6 +2,7 @@
 Alternative methods:
     MCMC with metropolis-hastings
     Direct simulation
+
 '''
 import numpy as np
 import pandas as pd
