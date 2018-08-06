@@ -1,3 +1,6 @@
+'''
+ugh idk
+'''
 def isin(v):
     return v > 0 and v <= N
 
@@ -24,6 +27,7 @@ if __name__ == '__main__':
 
             short_l, long_l, hyp = sorted((m, n, k))
             if not tri_valid(short_l, long_l, hyp):
+                print(m, n, k)
                 continue
 
             for side2 in range(1, long_l):
