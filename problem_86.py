@@ -1,5 +1,6 @@
 '''
 ugh idk
+still no idea
 '''
 def isin(v):
     return v > 0 and v <= N
