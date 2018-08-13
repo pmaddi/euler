@@ -1,5 +1,7 @@
 '''
 Correct, too slow
+
+Sad.
 '''
 
 def main():
@@ -27,7 +29,7 @@ def main():
     def place(side1, side2, side3):
         if valid(side1, side2, side3):
             cache.add(tuple(sorted((side1, side2, side3))))
-    side_max = 100# 3000
+    side_max = 99# 3000
     rng = side_max // 2
     cache = set()
     last = 0
@@ -48,10 +50,10 @@ def main():
                     place(b1, b - b1, a)
 
                 k += 1
-            if len(cache) == last:
-                print(len(cache))
+            # if len(cache) == last:
+            #     print(len(cache))
                 # return
-            last = len(cache)
+            # last = len(cache)
     # print(cache)
     print(len(cache))
 
