@@ -1,7 +1,4 @@
 '''
-Correct, too slow
-
-Sad.
 '''
 
 def main():
@@ -32,10 +29,10 @@ def main():
         else:
             print(side1, side2, side3)
 
-    side_max = 99# 3000
+    side_max = 100# 3000
     rng = side_max // 2
-    cache = set()
-    # last = 0
+    small_key_legs = {}
+    large_key_legs = {}
     for n in range(1, rng):
         for m in range(n + 1, rng):
             k = 1
@@ -46,19 +43,30 @@ def main():
                 if min(a, b) > side_max:
                     break
 
-                for a1 in range(1, a):
-                    place(a1, a - a1, b)
+                s, b = sorted((a, b))
 
-                for b1 in range(1, b):
-                    place(b1, b - b1, a)
+                sv = small_key_legs.get(s, set())
+                sv.add(b)
+                small_key_legs[s] = sv
+                lv = large_key_legs.get(b, set())
+                lv.add(s)
+                large_key_legs[b] = lv
 
                 k += 1
             # if len(cache) == last:
             #     print(len(cache))
                 # return
             # last = len(cache)
+    print(small_key_legs)
+    print(large_key_legs)
+    for n in range(side_max):
+        st = large_key_legs.get(n)
+        if st:
+            pass #
+
+
+
     # print(cache)
-    print(len(cache))
 
 if __name__ == '__main__':
     main()
