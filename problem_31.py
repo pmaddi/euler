@@ -16,6 +16,16 @@ def ways(p):
             cts[j] += cts[j - COINS[i]]
     return cts[p]
 
+def dways(COINS, p):
+    cts = [0 for i in range(p + 1)]
+
+    cts[0] = 1
+    for i in range(len(COINS)):
+        for j in range(COINS[i], p + 1):
+            # cts[j] is the ways to make j without COINS[i] or above
+            cts[j] += cts[j - COINS[i]]
+    return cts[p]
+
 
 if __name__ == '__main__':
     print(ways(1))
