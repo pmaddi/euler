@@ -51,7 +51,7 @@ def combine(n, v1, v2):
 def nums_below(n, powers):
     if not powers:
         return
-    primer = Primer(n)
+    primer = Primer(int(n ** .5) + 10)
     vals = powers_under(n, powers[0], primer)
     if len(powers) == 1:
         return vals
@@ -63,7 +63,6 @@ def ways_below(n):
     return len(nums_below(n, [2, 3, 4]))
 
 if __name__ == '__main__':
-    print(ways_below(50))
     assert(ways_below(50) == 4)
     print(ways_below(CEIL))
 
