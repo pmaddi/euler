@@ -63,7 +63,7 @@ def mps(k):
             nlst = lst + way
             assert(len(nlst) == orig_k)
             if is_product_sum(nlst):
-                return sum(nlst)
+                return k
         k += 1
 
 def sum_of(fn, max_k):
@@ -85,4 +85,5 @@ def test_sum_of():
     assert(sum_of(mps, 12) == 61)
 
 if __name__ == '__main__':
-    print(sum_of(mps, 12000))
+    print(mps(3421))
+    # print(sum_of(mps, 12000))
