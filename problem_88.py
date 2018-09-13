@@ -1,9 +1,3 @@
-'''
-Something about deciding where to draw the bars in a list of ones?
-
-Too slow rn:
-    Starts to get pretty slow around 1800
-'''
 from functools import reduce
 
 WAY_CACHE = {}
@@ -16,15 +10,6 @@ def s(x, y):
 
 def sums(lst):
     return reduce(p, lst), reduce(s, lst)
-
-def is_product_sum(lst):
-    l, r = sums(lst)
-    return l == r
-
-def test_is_product_sum():
-    assert(is_product_sum((2, 2)))
-    assert(is_product_sum((1, 2, 3)))
-    assert(not is_product_sum((1, 2, 4)))
 
 def ways_to_make(n):
     if n in WAY_CACHE:
@@ -59,19 +44,10 @@ def mps(k):
         for way in ways:
             if len(way) > orig_k:
                 continue
-            lst = tuple([1 for i in range(orig_k - len(way))])
-            nlst = lst + way
-            assert(len(nlst) == orig_k)
-            if is_product_sum(nlst):
+            way_sum = orig_k - len(way) + sum(way)
+            if way_sum == k:
                 return k
         k += 1
-
-def sum_of(fn, max_k):
-    st = set()
-    for i in range(2, max_k + 1):
-        print(i)
-        st.add(fn(i))
-    return sum(st)
 
 def test_mps():
     assert(mps(2) == 4)
@@ -80,10 +56,15 @@ def test_mps():
     assert(mps(5) == 8)
     assert(mps(6) == 12)
 
+def sum_of(fn, max_k):
+    st = set()
+    for i in range(2, max_k + 1):
+        st.add(fn(i))
+    return sum(st)
+
 def test_sum_of():
     assert(sum_of(mps, 6) == 30)
     assert(sum_of(mps, 12) == 61)
 
 if __name__ == '__main__':
-    print(mps(3421))
-    # print(sum_of(mps, 12000))
+    print(sum_of(mps, 12000))
