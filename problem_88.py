@@ -2,7 +2,9 @@
 Something about deciding where to draw the bars in a list of ones?
 
 Too slow rn:
-mps(113) is v slow
+mps(112) is v slow
+
+Alternative: Start with k, and come up with all ways to combine the prime factorization ordered from low to high sum. If none work out, then go to k + 1.
 '''
 from functools import reduce
 
@@ -44,7 +46,7 @@ def mps(k):
             continue
         else:
             seen.add(tpl)
-        # print(tpl)
+        print(tpl)
         if is_product_sum(tpl):
             return sum(tpl)
         opts = options(tpl)
@@ -69,5 +71,6 @@ def test_sum_of():
     assert(sum_of(mps, 12) == 61)
 
 if __name__ == '__main__':
+    print(mps(112))
     # print(mps(2))
-    print(sum_of(mps, 12000))
+    # print(sum_of(mps, 12000))
