@@ -2,11 +2,11 @@
 Something about deciding where to draw the bars in a list of ones?
 
 Too slow rn:
-mps(112) is v slow
-
-Alternative: Start with k, and come up with all ways to combine the prime factorization ordered from low to high sum. If none work out, then go to k + 1.
+    Starts to get pretty slow around 1800
 '''
 from functools import reduce
+
+WAY_CACHE = {}
 
 def p(x, y):
     return x * y
@@ -26,31 +26,45 @@ def test_is_product_sum():
     assert(is_product_sum((1, 2, 3)))
     assert(not is_product_sum((1, 2, 4)))
 
-def options(tpl):
+def ways_to_make(n):
+    if n in WAY_CACHE:
+        return WAY_CACHE[n]
+    if n in [1, 2]:
+        return [(n,)]
     out = []
-    vals = set(tpl)
-    for v in vals:
-        idx = tpl.index(v)
-        new_tpl = tpl[:idx] + (v + 1,) + tpl[idx + 1:]
-        out.append(tuple(sorted(new_tpl)))
-    out = sorted(out, key=lambda x: reduce(s, x))
-    return out
+    for i in range(2, int(n ** .5) + 1):
+        d = n // i
+        if not d * i == n:
+            continue
+        # d divides n
+        ws = ways_to_make(d)
+        for w in ws:
+            out.append(tuple(sorted(w + (i,))))
+    ret = sorted(set([(n,)] + out))
+    WAY_CACHE[n] = ret
+    return ret
+
+def test_ways_to_make():
+    assert(ways_to_make(1) == [(1,)])
+    assert(ways_to_make(2) == [(2,)])
+    assert(ways_to_make(3) == [(3,)])
+    assert(ways_to_make(4) == [(2,2), (4,)])
+    assert(ways_to_make(6) == [(2,3), (6,)])
+    assert(ways_to_make(8) == [(2,2,2), (2, 4), (8,)])
 
 def mps(k):
-    seen = set()
-    init = tuple([1 for i in range(k)])
-    queue = [init]
-    while len(queue) != 0:
-        tpl = queue.pop(0)
-        if tpl in seen:
-            continue
-        else:
-            seen.add(tpl)
-        print(tpl)
-        if is_product_sum(tpl):
-            return sum(tpl)
-        opts = options(tpl)
-        queue += opts
+    orig_k = k
+    while True:
+        ways = ways_to_make(k)
+        for way in ways:
+            if len(way) > orig_k:
+                continue
+            lst = tuple([1 for i in range(orig_k - len(way))])
+            nlst = lst + way
+            assert(len(nlst) == orig_k)
+            if is_product_sum(nlst):
+                return sum(nlst)
+        k += 1
 
 def sum_of(fn, max_k):
     st = set()
@@ -71,6 +85,4 @@ def test_sum_of():
     assert(sum_of(mps, 12) == 61)
 
 if __name__ == '__main__':
-    print(mps(112))
-    # print(mps(2))
-    # print(sum_of(mps, 12000))
+    print(sum_of(mps, 12000))
