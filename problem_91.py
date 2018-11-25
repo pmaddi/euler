@@ -1,3 +1,8 @@
+'''
+Brute force method, takes a few seconds.
+
+There'a a cooler method that uses diophantine equations
+'''
 def slope(p, q):
     '''returns None if div by zero
     '''
@@ -14,7 +19,8 @@ def two_slopes_prependicular(m1, m2):
         return True
     if m1 is None or m2 is None:
         return False
-    return m1 * m2 == -1
+    prod = m1 * m2
+    return prod > -1.0000001 and prod < -.9999999
 
 
 def forms_right_triangle(p, q):
@@ -36,11 +42,13 @@ def points(n):
 
 def count(n):
     cnt = 0
+    st = set()
     for p in points(n):
         for q in points(n):
             if p != q and forms_right_triangle(p, q):
+                st.add((min(p, q), max(p, q)))
                 cnt += 1
-    return cnt // 2
+    return len(st)# cnt // 2
 
 def test_slope():
     assert slope((0, 0), (0, 1)) is None
