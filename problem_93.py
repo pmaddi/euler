@@ -36,10 +36,63 @@ def count(digits):
     for op_set in op_combs:
         for digit_set in digit_perms:
             try:
-                # TODO: This fails to express (a / b) / (c / d)
-                # There are 5 locations for parens
+                # a + b + c + d
                 val0 = translate(op_set[0])(digit_set[0], digit_set[1])
                 val1 = translate(op_set[1])(val0, digit_set[2])
+                val2 = translate(op_set[2])(val1, digit_set[3])
+            except ZeroDivisionError:
+                pass
+            else:
+                expressable.add(rnd(val2))
+            try:
+                # (a + b) + (c + d)
+                vall = translate(op_set[0])(digit_set[0], digit_set[1])
+                valr = translate(op_set[2])(digit_set[2], digit_set[3])
+                val2 = translate(op_set[1])(vall, valr)
+            except ZeroDivisionError:
+                pass
+            else:
+                expressable.add(rnd(val2))
+            try:
+                # a + (b + c) + d
+                valp = translate(op_set[1])(digit_set[1], digit_set[2])
+                vall = translate(op_set[0])(digit_set[0], valp)
+                val2 = translate(op_set[2])(valp, val1)
+            except ZeroDivisionError:
+                pass
+            else:
+                expressable.add(rnd(val2))
+            try:
+                # a + b + (c + d)
+                valp = translate(op_set[2])(digit_set[2], digit_set[3])
+                vall = translate(op_set[0])(digit_set[0], digit_set[1])
+                val2 = translate(op_set[1])(valp, val1)
+            except ZeroDivisionError:
+                pass
+            else:
+                expressable.add(rnd(val2))
+            try:
+                # a + (b + c + d)
+                val1 = translate(op_set[1])(digit_set[1], digit_set[2])
+                valr = translate(op_set[2])(val1, digit_set[3])
+                val2 = translate(op_set[0])(digit_set[0], valr)
+            except ZeroDivisionError:
+                pass
+            else:
+                expressable.add(rnd(val2))
+            try:
+                # a + (b + (c + d))
+                valrr = translate(op_set[2])(digit_set[2], digit_set[3])
+                val1 = translate(op_set[1])(digit_set[1], valrr)
+                val2 = translate(op_set[0])(digit_set[0], val1)
+            except ZeroDivisionError:
+                pass
+            else:
+                expressable.add(rnd(val2))
+            try:
+                # (a + (b + c)) + d
+                valr = translate(op_set[1])(digit_set[1], digit_set[2])
+                val1 = translate(op_set[0])(digit_set[0], valr)
                 val2 = translate(op_set[2])(val1, digit_set[3])
             except ZeroDivisionError:
                 pass
@@ -67,6 +120,7 @@ def find_max():
                     if cnt > msf_v:
                         msf_v = cnt
                         msf = f"{a}{b}{c}{d}"
+    print(msf_v, msf)
     return msf
 
 def test_count():
