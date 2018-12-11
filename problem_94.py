@@ -29,3 +29,12 @@
 #             if int_ish(a):
 #                 sm += p
 #     print(sm)
+'''
+peremiter = 3s - 1 or 3s + 1
+
+p = (3s - 1) * .5 or (3s + 1) * .5
+area = sqrt(((3s - 1) * .5) * (((3s - 1) * .5) - s)**2 * (((3s - 1) * .5) - (s - 1)))
+
+and find where the area value is an int?
+is there a diophantine for this?
+'''
