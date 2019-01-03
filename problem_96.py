@@ -1,6 +1,3 @@
-'''
-Works for 1,2 and not 3.
-'''
 from pathlib import Path
 
 TEN_SET = set(range(1, 10))
@@ -62,11 +59,6 @@ class Board:
         i, j, moves = locs[0]
         for m in moves:
             yield self.replaced(i, j, m)
-        # for l in locs:
-        #     i, j, moves = l
-        #     for m in moves:
-        #         print(self)
-        #         yield self.replaced(i, j, m)
 
 def btrack(opt):
     if opt.filled():
