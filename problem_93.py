@@ -1,3 +1,9 @@
+'''
+Maybe do some some kind of binary search?
+
+'''
+'''
+# Dont work
 from itertools import permutations, product
 from math import ceil, floor
 
@@ -129,3 +135,4 @@ def test_count():
 if __name__ == '__main__':
     #count((1, 2, 3, 4))
     print(find_max())
+'''
