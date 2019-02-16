@@ -1,20 +1,4 @@
-'''
-Generating all the pairs of words that are anagrams:
-    go through each word and scan. n^2, but only 2k words.
-
-Need to generate the square number anagrams too?
-
-Then go through each pair and each square of the right length and see if the
-mapping works??
-
-2000^2 *
-
-'''
-
 from pathlib import Path
-
-
-DIGITS = 5
 
 
 def repositionings(a, b):
@@ -49,13 +33,13 @@ def test_anagrams():
     assert(len(anagrams(['abc', 'cba', 'd'])) == 1)
 
 
+def get_words_anas():
+    return anagrams(
+            Path('p098_words.txt').read_text().replace('"', '').split(','))
+
+
 def word_anagrams():
-    # Word anagrams
-    words = Path('p098_words.txt').read_text().replace('"', '').split(',')
-    a = anagrams(words)
-    for k, v in a.items():
-        if len(v[0]) != DIGITS:
-            continue
+    for k, v in get_words_anas().items():
         for i in v:
             for j in v:
                 if i == j:
@@ -63,12 +47,10 @@ def word_anagrams():
                 yield(i, j, repositionings(i, j))
 
 
-def digit_anagrams():
-    rng = range(int((10 ** (DIGITS - 1)) ** .5), int((10 ** DIGITS) ** .5) + 1)
+def digit_anagrams(max_digits):
+    rng = range(int((10 ** max_digits) ** .5) + 1)
     a = anagrams(rng, keyfn=lambda x: str(x ** 2), valuefn=lambda x: x ** 2)
     for k, v in a.items():
-        if len(str(v[0])) != DIGITS:
-            continue
         for i in v:
             for j in v:
                 if i == j:
@@ -77,13 +59,14 @@ def digit_anagrams():
 
 
 def comb():
-    dig = list(digit_anagrams())
     wor = list(word_anagrams())
+    max_digits = max(len(i) for i in get_words_anas().keys())
+    dig = list(digit_anagrams(max_digits))
     for w in wor:
         for d in dig:
             if w[2] == d[2]:
-                print(w, d)
+                yield(max(d[0:2]))
 
 
 if __name__ == '__main__':
-    comb()
+    print(max(list(comb())))
