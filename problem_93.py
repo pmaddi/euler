@@ -1,8 +1,6 @@
 '''
 Maybe do some some kind of binary search?
 
-'''
-'''
 # Dont work
 from itertools import permutations, product
 from math import ceil, floor
@@ -136,3 +134,28 @@ if __name__ == '__main__':
     #count((1, 2, 3, 4))
     print(find_max())
 '''
+
+# Do something like creating expressions of length n and producing all
+# expressions of length n up to that size...
+
+OPERATIONS = [
+    lambda x, y: x * y,
+    lambda x, y: x / y,
+    lambda x, y: x - y,
+    lambda x, y: x + y,
+]
+
+
+def expr(length, using):
+    '''Finds the producable values.
+
+    @length: the number of digits
+    @using: the available numbers
+
+    returns ...
+    '''
+    if length == 1:
+        return using
+    else:
+        '''Go through all the break points, make recursive call, use the
+        output of one to feed into the other recursive calls and merge'''
