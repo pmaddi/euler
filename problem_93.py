@@ -135,27 +135,73 @@ if __name__ == '__main__':
     print(find_max())
 '''
 
+from fractions import Fraction
+
 # Do something like creating expressions of length n and producing all
 # expressions of length n up to that size...
 
 OPERATIONS = [
     lambda x, y: x * y,
-    lambda x, y: x / y,
+    lambda x, y: Fraction(x, y),
     lambda x, y: x - y,
     lambda x, y: x + y,
 ]
 
+def diff(it1, it2):
+    return tuple(set(it1) - set(it2))
 
-def expr(length, using):
+def expr_h(length, using):
     '''Finds the producable values.
 
-    @length: the number of digits
+    @length: the number of digits that should be consumed
     @using: the available numbers
 
-    returns ...
+    returns [(producable_value, (used_number, ...)]
     '''
     if length == 1:
-        return using
+        return [(u, (u,)) for u in using]
     else:
-        '''Go through all the break points, make recursive call, use the
-        output of one to feed into the other recursive calls and merge'''
+        options = []
+        for lhs_length in range(1, length):
+            lhs = expr_h(lhs_length, using)
+            for l_produced, l_used in lhs:
+                assert(len(l_used) == lhs_length)
+                available_values = diff(using, l_used)
+                assert(available_values)
+                rhs = expr_h(length - lhs_length, available_values)
+                for r_produced, r_used in rhs:
+                    for op in OPERATIONS:
+                        try:
+                            options.append(
+                                (op(l_produced, r_produced), l_used + r_used)
+                            )
+                        except ZeroDivisionError:
+                            pass
+        options.sort(key=lambda x: x[0])
+        return options
+
+def expr(using):
+    return set(i for i, j in expr_h(len(using), using))
+
+def continuous(st):
+    i = 1
+    while True:
+        if i not in st:
+            return i - 1
+        i += 1
+
+def find_max():
+    msf = ''
+    msf_v = 0
+    for a in range(10):
+        for b in range(a + 1, 10):
+            for c in range(b + 1, 10):
+                for d in range(c + 1, 10):
+                    cnt = continuous(expr((a, b, c, d)))
+                    if cnt > msf_v:
+                        msf_v = cnt
+                        msf = f"{a}{b}{c}{d}"
+    return msf
+
+if __name__ == '__main__':
+    print(find_max())
