@@ -1,3 +1,4 @@
+'''Pretty slow, but under a minute'''
 from fractions import Fraction
 
 OPERATIONS = [
@@ -6,8 +7,6 @@ OPERATIONS = [
     lambda x, y: x - y,
     lambda x, y: x + y,
 ]
-
-CACHE = {}
 
 def diff(it1, it2):
     return tuple(sorted(tuple(set(it1) - set(it2))))
@@ -20,20 +19,14 @@ def expr_h(length, using):
 
     returns ((producable_value, (used_number, ...), ...)
     '''
-    # key = (length, using)
-    # if key in CACHE:
-    #     return CACHE[key]
-    out = None
     if length == 1:
-        out = ((u, (u,)) for u in using)
+        out = tuple((u, (u,)) for u in using)
     else:
         options = ()
         for lhs_length in range(1, length):
             lhs = expr_h(lhs_length, using)
             for l_produced, l_used in lhs:
-                assert(len(l_used) == lhs_length)
                 available_values = diff(using, l_used)
-                assert(available_values)
                 rhs = expr_h(length - lhs_length, available_values)
                 for r_produced, r_used in rhs:
                     for op in OPERATIONS:
@@ -44,7 +37,6 @@ def expr_h(length, using):
                         except ZeroDivisionError:
                             pass
         out = tuple(sorted(options, key=lambda x: x[0]))
-    # CACHE[key] = out
     return out
 
 def expr(using):
