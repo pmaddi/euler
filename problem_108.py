@@ -76,12 +76,12 @@ def inv(cand, n):
     return 1 / (1 / n - 1 / cand)
 
 
-def solutions(n):
+def solutions_old(n):
     count = 0
     cand = n + 1
     while True:
         y = inv(cand, n)
-        # print(n, cand, y, is_int(y))
+        print(n, cand, y, is_int(y))
         if y < cand:
             return count
         if is_int(y):
@@ -101,6 +101,24 @@ def solution_set(n):
             out.append((cand, round(y)))
         cand += 1
 
+def solutions(n):
+    """
+    1/15 + 1/30 == 1/15(1/1 + 1/2) == 1/15(2/2 + 1/2) == 1/15(3/2) ==
+    1/5*1/3(3/2) == 1/5*1/2 == 1/10
+
+    1/7*1/2+1/7*1/5 == 1/7(1/2 + 1/5) == 1/7(5/10 + 2/10) == 1/7(7/10) ==
+    1/10
+    """
+    count = 0
+    cand = n + 1
+    while True:
+        y = inv(cand, n)
+        print(n, cand, y, is_int(y))
+        if y < cand:
+            return count
+        if is_int(y):
+            count += 1
+        cand += 1
 
 def test_solutions():
     assert solutions(4) == 3
