@@ -55,6 +55,20 @@ i/xi + j/yj = 1/n
 where xi | n and yj | n
 
 answer greater than 133945
+answer less than 360360
+
+1660
+1800 4200'
+
+
+for all solutions, lcm of i, j must divide n
+
+
+1/n = 1/i + 1/j
+1/n = (i + j)/ij
+n = ij/(i + j)
+
+How many pairs for which prod to sum ratio is n?
 """
 
 
@@ -87,6 +101,23 @@ def solutions_old(n):
         if is_int(y):
             count += 1
         cand += 1
+
+
+def solutions(n):
+    count = 0
+    for i in range(2, n + 2):
+        count += ((n * i) % (i - 1) == 0)
+    return count
+
+
+def solution_st_1(n):
+    count = 0
+    out = []
+    for i in range(2, n + 2):
+        if (n * i) % (i - 1) == 0:
+            count += 1
+            out.append((n * i, inv(n * i, n)))
+    return out
 
 
 def solution_set(n):
@@ -134,6 +165,23 @@ def find():
             return n
         n += 1
 
+def find2():
+    cnts = {}
+    i = 1
+    while True:
+        for j in range(1, i + 1):
+            prod = i * j
+            sm = i + j
+            if prod % sm != 0:
+                continue
+            val = i * j // (i + j)
+            cnts[val] = cnts.get(val, 0) + 1
+            print(i, j, val, cnts[val])
+            if cnts[val] > 3:
+                print(i, j, val, cnts[val])
+                return
+        i += 1
+
 
 if __name__ == '__main__':
-    print(find())
+    find2()
