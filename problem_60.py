@@ -54,4 +54,6 @@ def main():
                   if is_pair(a, e) and is_pair(b, e) and is_pair(c, e) and is_pair(d, e):
                     print(cnt[0])
                     return a+b+c+d+e
-print(main())
+
+if __name__ == '__main__':
+    print(main())
