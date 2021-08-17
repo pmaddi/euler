@@ -28,22 +28,24 @@ def powerset(lst):
         out += list(combinations(lst, i))
     return out
 
-def has_prime(numlist):
+def prime_count(numlist):
     perms = list(permutations(numlist, len(numlist)))
+    cnt = 0
     for p in perms:
         v = int(''.join(p))
         pr = is_prime(v)
         if pr:
-            return True
-    return False
+            cnt += 1
+    return cnt
 
 def waycount():
     combos = powerset('123456789')
-    primes = [v for v in combos if has_prime(v)]
-    cache = {p: 1 for p in primes}
-    cache[()] = 1
+    num_tuple_to_primes = {v: prime_count(v) for v in combos}
+    cache = {p: {(p,)} for p, k in num_tuple_to_primes.items() if k > 0}
+    cache[()] = {(())}
+    last = None
     for c in combos:
-        count = 0
+        lst = set()
         c_set = set(c)
         used = set()
         for sub in powerset(c):
@@ -52,9 +54,21 @@ def waycount():
             other = tuple(sorted(c_set - sub_set))
             if other in used:
                 continue
-            count += cache.get(sub, 0) * cache.get(other, 0)
-        cache[c] = count
-        print(c, count)
+            lhs = cache.get(sub, set())
+            rhs = cache.get(other, set())
+            for l in lhs:
+                for r in rhs:
+                    lst.add(tuple(sorted(l + r)))
+        cache[c] = lst
+        last = lst
+    final_cnt = 0
+    for sltn in last:
+        prod = 1
+        for val in sltn:
+            prod *= num_tuple_to_primes[val]
+        final_cnt += prod
+    return final_cnt
+
 
 if __name__ == '__main__':
-    waycount()
+    print(waycount())
