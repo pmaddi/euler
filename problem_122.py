@@ -15,6 +15,4 @@ if __name__ == '__main__':
             paths.append(tuple(sorted(list(p + (last_val + adder,)))))
         if all(i in path_lengths for i in range(1, 201)):
             print(sum(path_lengths[i] for i in range(1, 201)))
-            # print(paths)
-            # print(sum(path_lengths.values()))
             break
