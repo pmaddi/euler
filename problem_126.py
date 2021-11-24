@@ -20,19 +20,27 @@ def gen_next(vol):
 
 
 def find():
-    i, j, k = 1
-    while(True):
-        
-    seen = []
-    for i in range(1, 10):
-        for j in range(i, 10):
-            for k in range(j, 10):
+    counts = {}
+    for i in range(1, 31):
+        for j in range(1, i + 1):
+            for k in range(1, j + 1):
+                # print(i, j, k, i * j * k)
                 dims = [i, j, k]
                 v = create(dims)
-                seen.append((dims, len(gen_next(v)[1])))
-    print(seen)
+                while True:
+                    v, outer = gen_next(v)
+                    sz = len(outer)
+                    # print(sz)
+                    counts[sz] = counts.get(sz, 0) + 1
+                    if counts[sz] == 1000:
+                        return sz
+                    if sz > 1000:
+                        break
+    print(sorted(counts.items()))
+    print(sorted(counts.items(), key=lambda x: x[1]))
 
-find()
+if __name__ == '__main__':
+    print(find())
 
 # v = create([1,2,3])
 # l1 = v
